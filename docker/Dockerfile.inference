@@ -1,0 +1,62 @@
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
+
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+ENV PATH="/opt/conda/bin:${PATH}"
+ENV PYTHONPATH="/workspace:${PYTHONPATH}"
+
+# Install essential packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    wget \
+    curl \
+    ca-certificates \
+    libnccl2 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Miniconda
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
+    bash /tmp/miniconda.sh -b -p /opt/conda && \
+    rm /tmp/miniconda.sh
+
+# Create a new conda environment
+RUN conda create -n quantum_flux python=3.10 -y
+ENV PATH="/opt/conda/envs/quantum_flux/bin:${PATH}"
+SHELL ["/bin/bash", "-c"]
+
+# Copy requirements file - inference only needs a subset
+COPY requirements-inference.txt /tmp/requirements-inference.txt
+
+# Install PyTorch and other dependencies
+RUN source activate quantum_flux && \
+    python -m pip install --no-cache-dir --upgrade pip && \
+    python -m pip install --no-cache-dir -r /tmp/requirements-inference.txt && \
+    python -m pip install --no-cache-dir torch==2.0.1+cu118 torchvision==0.15.2+cu118 --extra-index-url https://download.pytorch.org/whl/cu118 && \
+    conda clean -afy
+
+# Create workspace directory
+WORKDIR /workspace
+
+# Copy only the necessary files for inference
+COPY quantum_flux/ /workspace/quantum_flux/
+COPY scripts/inference.py /workspace/scripts/
+COPY scripts/benchmark.py /workspace/scripts/
+COPY scripts/evaluate_bleu.py /workspace/scripts/
+COPY setup.py README.md /workspace/
+
+# Install the quantum_flux package
+RUN source activate quantum_flux && \
+    pip install -e /workspace/
+
+# Create directories for models and results
+RUN mkdir -p /workspace/models /workspace/results
+
+# Expose port for inference API
+EXPOSE 8000
+
+# Set the entrypoint
+ENTRYPOINT ["/bin/bash", "-c", "source activate quantum_flux && exec \"$@\"", "--"]
+
+# Default command - runs the inference server
+CMD ["python", "scripts/inference.py", "--model_path", "/workspace/models/model_best.pt", "--port", "8000"]

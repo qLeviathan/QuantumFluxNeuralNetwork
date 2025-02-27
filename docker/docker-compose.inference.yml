@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  quantum-flux-inference:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.inference
+    image: quantum-flux:inference-latest
+    container_name: quantum-flux-inference
+    volumes:
+      - ../models:/workspace/models
+      - ../results:/workspace/results
+      - ../data:/workspace/data  # For evaluation datasets
+    ports:
+      - "8000:8000"  # Inference API
+    environment:
+      - CUDA_VISIBLE_DEVICES=0  # Set this to available GPU for inference
+    command: >
+      python scripts/inference.py 
+      --model_path /workspace/models/model_best.pt 
+      --port 8000
+    deploy:
+      replicas: 1
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+              count: 1
+    networks:
+      - quantum-flux-inference-net
+
+  # Benchmarking service
+  quantum-flux-benchmark:
+    image: quantum-flux:inference-latest
+    container_name: quantum-flux-benchmark
+    volumes:
+      - ../models:/workspace/models
+      - ../results:/workspace/results
+      - ../data:/workspace/data  # For benchmark datasets
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+    command: >
+      python scripts/benchmark.py
+      --model_path /workspace/models/model_best.pt
+      --dataset wikitext
+      --subset wikitext-103-raw-v1
+      --split test
+      --batch_sizes 1,2,4,8,16,32
+      --sequence_lengths 128,256,512,1024
+      --output_file /workspace/results/benchmark_results.json
+      --compare_transformer
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    networks:
+      - quantum-flux-inference-net
+      
+  # BLEU score evaluation service
+  quantum-flux-bleu:
+    image: quantum-flux:inference-latest
+    container_name: quantum-flux-bleu
+    volumes:
+      - ../models:/workspace/models
+      - ../results:/workspace/results
+      - ../data:/workspace/data  # For evaluation datasets
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+    command: >
+      python scripts/evaluate_bleu.py
+      --model_path /workspace/models/model_best.pt
+      --dataset wmt16
+      --subset de-en
+      --direction en-de
+      --max_samples 1000
+      --beam_size 5
+      --output_file /workspace/results/bleu_results.json
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    networks:
+      - quantum-flux-inference-net
+
+networks:
+  quantum-flux-inference-net:
+    driver: overlay

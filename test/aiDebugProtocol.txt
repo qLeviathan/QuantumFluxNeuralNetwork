@@ -1,0 +1,46 @@
+I'm debugging the [specific component] in my Quantum Flux Neural Network project and encountering [specific error].
+
+Error context:
+- File: [filename]
+- Function/method: [function name]
+- Line: [line number or code snippet]
+- Full error message: [error message]
+- Stack trace insights: [key parts of the stack trace]
+
+Runtime state:
+- Mode: [inference/training]
+- Tensor shapes: [relevant tensor shapes]
+- PyTorch version: [version]
+
+Code structure:
+[relevant code blocks with line numbers]
+
+My understanding:
+[your interpretation of what might be causing the issue]
+
+Please help me:
+1. Understand the root cause of this error
+2. Develop a sustainable fix that follows PyTorch best practices
+3. Identify any related areas in my codebase that might have similar issues
+4. Document the fix properly with comments explaining the why, not just the how
+
+
+## Documenting Solutions for AI Context
+
+When you receive a solution, document it clearly in your code with comments that provide context for future AI assistance:
+
+```python
+# IMPORTANT: Using clone() to avoid in-place updates during inference
+# PyTorch >1.9 restricts in-place tensor modifications during inference as
+# part of its functional/non-functional API enforcement
+# See: https://github.com/pytorch/rfcs/pull/17
+with torch.no_grad():
+    # Create a clone for modification to avoid inference tensor restrictions
+    if torch.is_inference_mode_enabled():
+        connection_strength_temp = self.connection_strength.clone()
+        connection_strength_temp[:, :seq_len, :seq_len] *= self.config.hebbian_decay
+        # ... more operations ...
+        self.connection_strength = connection_strength_temp  # Replace with modified version
+    else:
+        # In training mode, in-place operations are allowed
+        self.connection_strength[:, :seq_len, :seq_len] *= self.config.hebbian_decay

@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  quantum-flux-master:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.training
+    image: quantum-flux:training-latest
+    container_name: quantum-flux-master
+    hostname: master
+    volumes:
+      - ../data:/workspace/data
+      - ../output:/workspace/output
+      - ../logs:/workspace/logs
+      - ../configs:/workspace/configs
+    ports:
+      - "6006:6006"  # For TensorBoard
+      - "22:22"      # For SSH
+    environment:
+      - CUDA_VISIBLE_DEVICES=0,1  # Set this to available GPUs on master node
+      - WANDB_API_KEY=${WANDB_API_KEY:-}
+      - MASTER_ADDR=master
+      - MASTER_PORT=29500
+      - NODE_RANK=0
+      - WORLD_SIZE=${WORLD_SIZE:-1}
+    command: >
+      bash -c "service ssh start && 
+      cd /workspace &&
+      python scripts/train_wandb.py
+      --config configs/base.yaml
+      --dataset wikitext
+      --subset wikitext-103-raw-v1
+      --output /workspace/output/training
+      --wandb
+      --wandb_project quantum-flux
+      --wandb_name 'distributed-training'
+      --gpu 0,1
+      --batch_size 8"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    networks:
+      - quantum-flux-net
+
+  # Worker node - add more as needed by copying this section and changing NODE_RANK
+  quantum-flux-worker-1:
+    image: quantum-flux:training-latest
+    container_name: quantum-flux-worker-1
+    hostname: worker1
+    volumes:
+      - ../data:/workspace/data
+      - ../output:/workspace/output
+      - ../logs:/workspace/logs
+    depends_on:
+      - quantum-flux-master
+    environment:
+      - CUDA_VISIBLE_DEVICES=0,1  # Set this to available GPUs on worker node
+      - MASTER_ADDR=master
+      - MASTER_PORT=29500
+      - NODE_RANK=1
+      - WORLD_SIZE=${WORLD_SIZE:-1}
+    command: >
+      bash -c "service ssh start && 
+      cd /workspace &&
+      python scripts/train_wandb.py
+      --config configs/base.yaml
+      --dataset wikitext
+      --subset wikitext-103-raw-v1
+      --output /workspace/output/training
+      --wandb
+      --wandb_project quantum-flux
+      --wandb_name 'distributed-training'
+      --gpu 0,1
+      --batch_size 8"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    networks:
+      - quantum-flux-net
+
+networks:
+  quantum-flux-net:
+    driver: overlay

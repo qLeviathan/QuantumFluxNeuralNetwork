@@ -1,0 +1,28 @@
+# Quantum Flux Base Configuration
+# Optimized for consumer GPUs (RTX 4090)
+
+# Embedding and sequence dimensions
+embed_dim: 768  # Embedding dimension for token representations
+max_seq_length: 1024  # Maximum sequence length the model can process
+num_layers: 6  # Number of quantum layers in the model
+vocab_size: 50257  # Size of GPT-2 vocabulary for compatibility
+
+# Quantum dynamics parameters
+phase_shift: 0.7853981633974483  # π/4 in radians
+dt_scale: 0.00001  # Time step scale factor for integration
+dt_max: 0.05  # Maximum allowed time step
+
+# Hebbian learning parameters
+hebbian_decay: 0.99  # Decay factor for Hebbian learning connections (0.99 = 1% decay per step)
+hebbian_strength: 0.1  # Strength of Hebbian learning updates
+connection_clamp: 0.5  # Maximum absolute value for connection strengths
+
+# Radius parameters
+min_radius: 0.1  # Minimum token radius in the latent space
+max_radius: 2.0  # Maximum token radius in the latent space
+radius_update_rate: 0.01  # Rate at which token radii are updated
+
+# Skip connection and training parameters
+skip_beta: 5.0  # Controls skip connection dynamics
+learning_rate: 0.0001  # Learning rate for weight updates (1e-4)
+epsilon: 0.000001  # Small value for numerical stability (1e-6)
