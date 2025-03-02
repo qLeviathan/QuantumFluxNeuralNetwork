@@ -1,36 +1,27 @@
-# Leviathan AI Open Research License (LORL) v1.0
+# MIT License
 
-## Copyright (c) 2025 Leviathan AI Corporation
+Copyright (c) 2025 Leviathan AI Corporation
 
-### Contact: contact@leviathan-ai.net
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-## Terms and Conditions
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-Permission is hereby granted, free of charge, to any person or organization obtaining a copy of the software, documentation, and associated files (the "Software") related to the Quantum Flux Neural Network, to use, copy, modify, merge, distribute, and/or sell copies of the Software, subject to the following conditions:
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
-1. **Attribution Requirement**: All copies or substantial portions of the Software must include the above copyright notice, this list of conditions, and the following acknowledgment:
-   
-   "This software contains technology developed by Leviathan AI Corporation (https://leviathan-ai.net)."
+## Additional Terms for Quantum Flux Reality Engine
 
-2. **Research and Educational Use**: The Software may be freely used for research and educational purposes without restriction.
+The Quantum Flux Reality Engine components are proprietary and excluded from this MIT License. Access to the Reality Engine requires a separate licensing agreement.
 
-3. **Commercial License Requirement**: Any use of the Software for commercial purposes requires a separate commercial license agreement from Leviathan AI Corporation. For commercial licensing inquiries, please contact: contact@leviathan-ai.net.
-
-4. **Derivative Works**: 
-   - Derivative works and modifications must be distributed under the same license terms.
-   - Derivative works must include clear documentation of changes made to the original Software.
-   - Leviathan AI Corporation must be notified of any significant derivative works through the contact email provided above.
-
-5. **Patent Rights**: No express or implied licenses to any patent rights are granted by this license.
-
-6. **Quantum Flux Reality Engine Exclusion**: The Quantum Flux Reality Engine components are proprietary and excluded from this open license. Access to the Reality Engine requires a separate licensing agreement.
-
-7. **No Warranty**: THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-8. **Indemnification**: You agree to indemnify, defend and hold harmless Leviathan AI Corporation, its officers, directors, employees, agents and affiliates from and against any and all claims, damages, losses, liabilities, costs, and expenses arising from your use or modification of the Software.
-
-9. **Governing Law**: This license shall be governed by and construed in accordance with the laws of Delaware, USA, without regard to its conflict of law provisions.
-
-By using, copying, modifying, merging, publishing, distributing, or sublicensing the Software, you indicate your acceptance of the terms of this license.
-
-For inquiries regarding this license or to request commercial licensing, please contact: contact@leviathan-ai.net
+For licensing inquiries, please contact: contact@leviathan-ai.net
